@@ -12,6 +12,8 @@ const EffectFunc = () => {
   const numberArray = [23,26,33,24];
   const keyNumber = 106;
   const [countArray, setCountArray] = useState<number[]>([]);
+  const [date , setDate] = useState<number>(0);
+  const [subDate , setSubDate] = useState<number>(0);
   const [time, setTime] = useState(0);
   const [count, setCount] = useState(0);
   const [subtime, setSubtime] = useState(0);
@@ -27,13 +29,14 @@ const EffectFunc = () => {
     }
     if (start === true && count < array.length) {
       const id = setInterval(() => {
-        setTime((t) => t + 0.1)
-        setSubtime((t) => t + 0.1);
+        setTime((Date.now() - date)/1000);
+        setSubtime((Date.now() - subDate)/1000);
       }, 90); //処理時間の補正により、100を90にした。
       return () => clearInterval(id);
     }
   });
   useEffect(() => {
+    setSubDate(Date.now());
     console.log(countArray);  // これなら1増えた値が表示される
 }, [countArray]);
 
@@ -46,6 +49,8 @@ const EffectFunc = () => {
             variant="outlined"
             onClick={() => {
               setStart(true);
+              setDate(Date.now());
+              setSubDate(Date.now());
             }}
           >
             スタート
@@ -148,6 +153,7 @@ const EffectFunc = () => {
               setTime(0);
               setName("");
               setSubtime(0);
+              setVisible(false);
               countArray.splice(0);
             }}
           >
