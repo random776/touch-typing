@@ -9,22 +9,33 @@ const EffectFunc = () => {
     "だんじょきょうどうさんかくしゃかいきほんほう",
     "ぽりえちれんてれふたらーと",
   ];
+  const numberArray = [23,26,33,24];
+  const keyNumber = 106;
+  const [countArray, setCountArray] = useState<number[]>([]);
   const [time, setTime] = useState(0);
   const [count, setCount] = useState(0);
+  const [subtime, setSubtime] = useState(0);
   const [start, setStart] = useState(false);
   const [name, setName] = useState("");
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
     if (array[count] === name) {
+      setCountArray([...countArray, subtime])
+      setSubtime(0);
       setCount(count + 1);
       setName("");
     }
     if (start === true && count < array.length) {
       const id = setInterval(() => {
-        setTime((t) => t + 0.1);
+        setTime((t) => t + 0.1)
+        setSubtime((t) => t + 0.1);
       }, 90); //処理時間の補正により、100を90にした。
       return () => clearInterval(id);
     }
   });
+  useEffect(() => {
+    console.log(countArray);  // これなら1増えた値が表示される
+}, [countArray]);
 
   return (
     <>
@@ -80,10 +91,55 @@ const EffectFunc = () => {
           </form>
         </>
       )}
+      
       {count >= array.length && start === true && (
         <>
           <h2>簡易タイピングゲーム</h2>
-          <p>あなたの記録は、 {Math.floor(time * 10) / 10}秒です。</p>
+          <p>あなたの記録は、 {Math.floor(time * 10) / 10} 秒です。</p>
+          <p>1秒あたりの打鍵は {Math.floor((keyNumber / time) * 10) / 10} 回です。</p>
+          {visible === false && 
+          <div className="button">
+          <Button
+            variant="outlined"
+            onClick={() => {
+              setVisible(true);
+            }}
+          >
+            結果の詳細を表示
+          </Button>
+          </div>
+          }
+          {visible === true && 
+          <div className="button">
+          <Button
+            variant="outlined"
+            onClick={() => {
+              setVisible(false);
+            }}
+          >
+            結果の詳細を非表示
+          </Button>
+          </div>
+          }
+          {visible === true &&
+          <table key={"table"} className={"table"}>
+          <thead>
+            <th>問題</th>
+            <th>かかった時間</th>
+            <th>1秒あたりの打鍵</th>
+          </thead>
+          <tbody>
+            {countArray.map((content,i) => (
+              <tr>
+                <td key={`変数${content}`}>{array[i]}</td>
+                <td key={`中身${content}`}>{Math.floor(content * 10) / 10} s</td>
+                <td key={`速度${content}`}>{Math.floor((numberArray[i]/content) * 10) / 10} 回</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+          }
+          <div className="button">
           <Button
             variant="outlined"
             onClick={() => {
@@ -91,10 +147,14 @@ const EffectFunc = () => {
               setCount(0);
               setTime(0);
               setName("");
+              setSubtime(0);
+              countArray.splice(0);
             }}
           >
             やり直す
           </Button>
+          </div>
+          
           <p style={{ margin: 10 }}>
             ＊
             このツールがいいと思ったら、ぜひともいいねとRTをお願いいたします！

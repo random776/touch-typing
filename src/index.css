@@ -71,3 +71,27 @@ button:focus-visible {
   display: inline;
   padding: 10px 20px 10px 0px;
 }
+
+th,td {
+  border: solid 1px;
+  font-weight: normal;
+  color: rgb(42, 42, 42);
+          /* 枠線指定 */
+}
+
+
+table {
+  border-collapse:  collapse;     /* セルの線を重ねる */
+  display: table;
+  table-layout: fixed;
+	width: 100%;
+  max-width: 767px;
+  text-align: center;
+  border-radius: 5px;
+  background-color: rgb(103, 255, 255);
+  margin: 10px 0px;
+}
+
+.button {
+  margin: 10px 0px;
+}
